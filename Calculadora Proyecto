@@ -1,0 +1,369 @@
+#Importar Modulos
+from tkinter import *
+from tkinter import ttk
+from tkinter import font
+
+
+import math
+
+
+
+def factorial(n):
+   if n == 0 or n == 1:
+       return 1
+   else:
+       return n * factorial(n-1)
+
+
+# Programación de funciones
+def log(x):
+    try:
+        result = math.log10(x)
+        return result
+    except ValueError:
+        return "SyntaxError"
+
+def sin_deg(x):
+   n = 0
+   result = 0
+   termino = x
+   while abs(termino) >= 0.000001:
+       result += termino
+       n += 1
+       termino = ((-1) ** (n)) * ((x ** (2 * n + 1)) / factorial(2 * n + 1))
+   return result
+
+def cos_deg(x):
+   n = 0
+   resultado = 0
+   termino = 1
+   while abs(termino) >= 0.000001:
+       resultado += termino
+       n += 1
+       termino = ((-1) ** n) * (x ** (2 * n)) / factorial(2 * n)
+   return resultado
+
+def tan_deg(x):
+    sin_val = sin_deg(x)
+    cos_val = cos_deg(x)
+
+    if cos_val != 0:
+        return sin_val / cos_val
+    else:
+        return "SyntaxError"
+
+def arcsin(x, precision=1e-10):
+    resultado = 0
+    termino_actual = x
+    n = 1
+
+    while abs(termino_actual) > precision:
+        resultado += termino_actual
+        termino_actual *= (x**2) * ((2*n - 1) / (2*n))
+        termino_actual /= (2*n + 1)
+        n += 1
+
+    return resultado
+
+def arccos(x):
+    return math.pi / 2 - arcsin(x)
+
+def arctan(x, precision=1e-10):
+    resultado = 0
+    termino_actual = x
+    n = 1
+
+    while abs(termino_actual) > precision:
+        resultado += termino_actual
+        termino_actual *= (-x**2)
+        termino_actual /= (2*n + 1)
+        n += 1
+
+    return resultado
+
+def CnCr(n, r):
+    if r < 0 or r > n:
+        return 0
+    
+    result = 1
+    for i in range(min(r, n - r)):
+        result *= (n - i)
+        result //= (i + 1)
+    
+    return result
+
+def potencia(base, exponente):
+    result = 1
+    if exponente < 0:
+        base = 1 / base
+        exponente = -exponente
+
+    for _ in range(exponente):
+        result *= base
+
+    return result
+
+def CnPr(n, r):
+    if r < 0 or r > n:
+        return 0
+    
+    result = 1
+    for i in range(r):
+        result *= (n - i)
+    
+    return result
+
+def MOD(dividend, divisor):
+    if divisor == 0:
+        return "Error: División por cero"
+    
+    result = dividend - (divisor * (dividend // divisor))
+    return result
+
+def Exp(x, y):
+    return (x*(10**y))
+
+
+resultado_anterior = 0.0
+
+
+
+
+def almacenar_resultado():
+    global resultado_anterior
+    try:
+        resultado_anterior = float(area.get())
+    except ValueError:
+        resultado_anterior = 0.0  
+        area.delete(0, END)
+        area.insert(0, "Error")
+
+
+def mostrar_resultado_anterior():
+    area.delete(0, END)
+    area.insert(END, resultado_anterior)
+
+
+
+
+
+
+
+
+
+
+
+
+# Programación de FUNCION CLICK
+
+
+
+def click(valor):
+    ex = area.get()
+    answer = ''
+     
+    global resultado_anterior  
+    try:
+        if valor == '<-':
+            ex = ex[0:len(ex)-1]
+            area.delete(0, END)
+            area.insert(0, ex)
+        elif valor == 'AC':
+            area.delete(0, END)
+        elif valor == 'C':
+            area.delete(0, END)
+        elif valor == '√':
+            answer = eval(ex + '**0.5')
+            area.delete(0, END)
+            area.insert(0, answer)
+        elif valor == 'π':
+            area.insert(END, '3.14159')
+        elif valor == 'x²':
+            answer = eval(ex + '**2')
+            area.delete(0, END)
+            area.insert(0, answer)
+        elif valor == '+/-':
+            try:
+             ex = float(ex)
+             answer = -ex
+             area.delete(0, END)
+             area.insert(0, answer)
+            except ValueError:
+             area.delete(0, END)
+             area.insert(0, "Error") 
+        elif valor =='x!':
+
+            n = int(ex)
+            answer = 1
+            for i in range(1, n + 1):
+                answer *= i
+            area.delete(0, END)
+            area.insert(0, answer)
+        elif valor == 'sin°':
+            area.insert(END, 'sin(')
+        elif valor == 'cos°':
+            area.insert(END, 'cos(')
+        elif valor == 'tan°':
+            area.insert(END, 'tan(')
+        elif valor=='arcsin':
+            area.insert(END,'asin')
+        elif valor=='arccos':
+            area.insert(END,'acos')
+        elif valor=='arctan':
+            area.insert(END,'atan')
+        elif valor=='10^x':
+            area.insert(END,'10^') 
+        elif valor == '^':
+            area.insert(END,'^')
+        elif valor == 'nCr':
+         area.insert(END, 'c')
+        elif valor == 'nPr':
+         area.insert(END, 'p')
+        elif valor == 'Mod':
+         area.insert(END, 'mod')
+        elif valor == 'Exp':
+         area.insert(END, 'E')
+
+        elif valor == 'Store':
+         almacenar_resultado()
+
+        elif valor == 'ans':
+         mostrar_resultado_anterior()
+
+        elif valor == 'log':
+            area.insert(END, 'log(')
+
+       
+ 
+
+
+
+        # Funciones operadores
+        elif valor == '=':
+
+            if 'log' in ex:
+
+                argumento = float(ex[4:-1]) if ex[-1] == ')' else float(ex[4:])
+                answer = log(argumento)
+
+            elif 'E' in ex:
+                x, terms = map(int, ex.split('E'))
+                answer = Exp(x, terms)
+
+            elif 'mod' in ex:
+                dividend, divisor = map(int, ex.split('mod'))
+                answer = MOD(dividend, divisor)
+
+            elif 'p' in ex:
+                n, r = map(int, ex.split('p'))
+                answer = CnPr(n, r)
+
+            elif 'c' in ex:
+                n, r = map(int, ex.split('c'))
+                answer = CnCr(n, r)
+
+            elif '^' in ex:
+                base, exponente = map(int, ex.split('^'))
+                answer = potencia(base, exponente)
+
+            elif 'sin' in ex:
+                argumento = float(ex[4:-1]) if ex[-1] == ')' else float(ex[4:])
+                answer = sin_deg(argumento)
+
+            elif 'cos' in ex:
+                argumento = float(ex[4:-1]) if ex[-1] == ')' else float(ex[4:])
+                answer = cos_deg(argumento)
+
+            elif 'tan' in ex:
+                argumento = float(ex[4:-1]) if ex[-1] == ')' else float(ex[4:])
+                answer = tan_deg(argumento)
+
+            elif 'arcsin' in ex:
+                argumento = float(ex[4:-1]) if ex[-1] == ')' else float(ex[4:])
+                if -1 <= argumento <= 1:
+                    answer = arcsin(argumento)
+                else:
+                    answer = "Ingrese un numero válido"
+
+            elif 'arccos' in ex:
+                argumento = float(ex[4:-1]) if ex[-1] == ')' else float(ex[4:])
+                if -1 <= argumento <= 1:
+                    answer = arccos(argumento)
+                else:
+                    answer = "Ingrese un numero válido"
+
+            elif 'arctan' in ex:
+                argumento = float(ex[6:-1]) if ex[-1] == ')' else float(ex[6:])
+                if -1 <= argumento <= 1:
+                    answer = arctan(argumento)
+                else:
+                    answer = "Ingrese un numero válido"
+
+            else:
+                answer=eval(ex)
+            area.delete(0, END)
+            area.insert(0, answer)
+
+        else:
+            area.insert(END, valor)
+
+    except SyntaxError:
+        pass
+
+
+
+
+
+
+# Programación de  BOTONES E INTERFACE
+
+
+calculadora = Tk()
+calculadora.title("Grupo #5-Calculadora Cientifica")
+calculadora.geometry('300x400+100+100')  
+
+
+area = Entry(calculadora, font=('Roboto', 20, 'bold'), bd=5, width=10)
+area.grid(row=0, column=0, columnspan=5, sticky='nsew')
+
+
+
+
+# Botones más pequeños con funciones asociadas
+lista_botones = [
+
+     'nPr','nCr','arcsin','arccos','arctan',
+     'x²', '^','sin°','cos°','tan°',
+    '√', '10^x', 'log', 'Exp', 'Mod',
+   'ans', 'Store','AC', '<-',  '/',
+    'π', '7', '8', '9', '*',
+    'x!', '4', '5', '6', '-',
+    '+/-', '1', '2', '3', '+',
+   '(', ')', '0', '.', '='
+]
+
+rowvalue = 1
+columnvalue = 0
+
+roboto_font = font.Font(family="Roboto")
+
+
+                                        
+for i in lista_botones:
+    boton = Button(calculadora, width=5, height=2, bd=1,font=('Roboto', 10, 'bold'), text=i, command=lambda boton=i: click(boton), )
+    boton.grid(row=rowvalue, column=columnvalue, pady=1, sticky='nsew')
+    columnvalue += 1
+    if columnvalue > 4:
+        rowvalue += 1
+        columnvalue = 0
+
+# Programación de  DETALLES DE INTERFACE
+
+
+for i in range(6):
+    calculadora.grid_rowconfigure(i, weight=1)
+    calculadora.grid_columnconfigure(i, weight=1)
+
+almacenar_resultado_button = ttk.Button(calculadora, text="Store", command=almacenar_resultado)
+
+calculadora.mainloop()
